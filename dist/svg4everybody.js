@@ -23,6 +23,7 @@
             // append the fragment into the svg
             parent.appendChild(fragment);
 
+            // function which is called when the embed is done
             callback(parent);
         }
     }
