@@ -8,7 +8,7 @@
     module.exports = factory() : root.svg4everybody = factory();
 }(this, function() {
     /*! svg4everybody v2.1.8 | github.com/jonathantneal/svg4everybody */
-    function embed(parent, svg, target) {
+    function embed(parent, svg, target, callback) {
         // if the target exists
         if (target) {
             // create a document fragment to hold the contents of the target
@@ -22,9 +22,11 @@
             }
             // append the fragment into the svg
             parent.appendChild(fragment);
+
+            callback(parent);
         }
     }
-    function loadreadystatechange(xhr) {
+    function loadreadystatechange(xhr, callback) {
         // listen to changes in the request
         xhr.onreadystatechange = function() {
             // if the request is ready
@@ -40,7 +42,7 @@
                     // ensure the cached target
                     target || (target = xhr._cachedTarget[item.id] = cachedDocument.getElementById(item.id)), 
                     // embed the target into the svg
-                    embed(item.parent, item.svg, target);
+                    embed(item.parent, item.svg, target, callback);
                 });
             }
         }, // test the ready state change immediately
@@ -74,10 +76,10 @@
                                     svg: svg,
                                     id: id
                                 }), // prepare the xhr ready state change event
-                                loadreadystatechange(xhr);
+                                loadreadystatechange(xhr, opts.callback);
                             } else {
                                 // embed the local id into the svg
-                                embed(parent, svg, document.getElementById(id));
+                                embed(parent, svg, document.getElementById(id), opts.callback);
                             }
                         } else {
                             // increase the index when the previous value was not "valid"
